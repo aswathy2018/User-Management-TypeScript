@@ -319,9 +319,17 @@ input:focus {
     min-height: 400px;
 }
 
+.error-message {
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
+    display: none;
+    margin-left: 5px;
+}
+
 </style>
 </head>
-<body>
+<!-- <body>
     <div class="overlay">
         <div class="popup-container">
             <header>
@@ -340,12 +348,12 @@ input:focus {
                         <form id="signupForm">
                             <div class="input-group">
                                 <img src="https://api.iconify.design/mdi:email-outline.svg" alt="Email" class="input-icon">
-                                <input type="email" id="email" placeholder="Your Email" required>
+                                <input type="email" id="email" placeholder="Your Email">
                             </div>
 
                             <div class="input-group">
                                 <img src="https://api.iconify.design/mdi:lock-outline.svg" alt="Password" class="input-icon">
-                                <input type="password" id="password" placeholder="Your Password" required>
+                                <input type="password" id="password" placeholder="Your Password">
                             </div>
 
                             <button type="submit" class="signup-btn">Login</button>
@@ -363,5 +371,183 @@ input:focus {
         </div>
     </div>
     <script src="authPage.js"></script>
+</body> -->
+
+<body>
+    <div class="overlay">
+        <div class="popup-container">
+            <header>
+                <div class="logo">
+                    <img src="https://api.iconify.design/mdi:shaker-outline.svg" alt="CaIN Logo" class="logo-icon">
+                    <span>Login</span>
+                </div>
+            </header>
+
+            <main>
+                <div class="form-container">
+                    <div id="loginForm" class="form active">
+                        <h1>Welcome Back</h1>
+                        <p class="subtitle">Login to continue to your account</p>
+
+                        <form id="loginFormElement">
+                            <div class="input-group">
+                                <img src="https://api.iconify.design/mdi:email-outline.svg" alt="Email" class="input-icon">
+                                <input type="email" id="email" placeholder="Your Email">
+                                <span id="emailError" class="error-message" style="display: none;"></span>
+                            </div>
+
+                            <div class="input-group">
+                                <img src="https://api.iconify.design/mdi:lock-outline.svg" alt="Password" class="input-icon">
+                                <input type="password" id="password" placeholder="Your Password">
+                                <span id="passwordError" class="error-message" style="display: none;"></span>
+                            </div>
+
+                            <button type="submit" class="signup-btn">Login</button>
+
+                            <p class="login-link">
+                                Don't have an account? <a href="/signup" class="switch-form" data-form="registerForm">Sign Up</a>
+                            </p>
+                        </form>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    <script src="authPage.js"></script>
 </body>
+
+<script>
+    const form = document.getElementById('loginFormElement');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const emailError = document.getElementById('emailError');
+        const passwordError = document.getElementById('passwordError');
+
+        // Validation functions (reused from signup)
+        function validateEmail(email) {
+            if (!email.trim()) {
+                return 'Email is required';
+            }
+            if (email.trim().length === 0) {
+                return 'Email cannot contain only spaces';
+            }
+            if (/^\d+$/.test(email)) {
+                return 'Email cannot contain only numbers';
+            }
+            if (/^[^a-zA-Z0-9]+$/.test(email)) {
+                return 'Email cannot contain only special characters';
+            }
+            const emailRegex = /^[a-z][a-z0-9]*@[a-z]+\.com$/;
+            if (!emailRegex.test(email)) {
+                return 'Invalid email format (e.g., aswathy123@gmail.com)';
+            }
+            return '';
+        }
+
+        function validatePassword(password) {
+            if (!password) {
+                return 'Password is required';
+            }
+            if (password.length < 4) {
+                return 'Password must be at least 4 characters long';
+            }
+            if (/\s/.test(password)) {
+                return 'Password cannot contain spaces';
+            }
+            if (!/[A-Z]/.test(password)) {
+                return 'Password must contain at least one capital letter';
+            }
+            if (!/[0-9]/.test(password)) {
+                return 'Password must contain at least one number';
+            }
+            if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
+                return 'Password must contain at least one special character';
+            }
+            return '';
+        }
+
+        // Real-time validation
+        [emailInput, passwordInput].forEach(input => {
+            input.addEventListener('blur', function () {
+                const errorId = this.id + 'Error';
+                const errorElement = document.getElementById(errorId);
+                const validator = {
+                    email: validateEmail,
+                    password: validatePassword
+                }[this.id];
+                const error = validator(this.value);
+                errorElement.textContent = error;
+                errorElement.style.display = error ? 'block' : 'none';
+            });
+
+            input.addEventListener('input', function () {
+                const errorId = this.id + 'Error';
+                const errorElement = document.getElementById(errorId);
+                if (errorElement.textContent) {
+                    const validator = {
+                        email: validateEmail,
+                        password: validatePassword
+                    }[this.id];
+                    const error = validator(this.value);
+                    errorElement.textContent = error;
+                    errorElement.style.display = error ? 'block' : 'none';
+                }
+            });
+        });
+
+        // Form submission
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            // Validate all fields
+            const emailErr = validateEmail(emailInput.value);
+            const passwordErr = validatePassword(passwordInput.value);
+
+            // Display errors
+            emailError.textContent = emailErr;
+            passwordError.textContent = passwordErr;
+            emailError.style.display = emailErr ? 'block' : 'none';
+            passwordError.style.display = passwordErr ? 'block' : 'none';
+
+            // If no errors, submit the form
+            if (!emailErr && !passwordErr) {
+                const formData = {
+                    email: emailInput.value.trim(),
+                    password: passwordInput.value
+                };
+
+                fetch('/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            window.location.href = '/home'; // Redirect to home page on success
+                        } else {
+                            if (data.message === 'Email not found') {
+                                emailError.textContent = data.message;
+                                emailError.style.display = 'block';
+                            } else if (data.message === 'This user is currently blocked') {
+                                emailError.textContent = data.message;
+                                emailError.style.display = 'block';
+                            } else if (data.message === 'Incorrect password') {
+                                passwordError.textContent = data.message;
+                                passwordError.style.display = 'block';
+                            } else {
+                                alert(data.message || 'Login failed. Please try again.');
+                            }
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('An error occurred. Please try again.');
+                    });
+            }
+        });
+</script>
+
 </html>

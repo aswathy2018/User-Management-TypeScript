@@ -8,28 +8,90 @@ import { request } from "http";
 const getIndex = async (req: Request, res: Response): Promise<void> => {
     try {
         if (req.session.user) {
-            res.redirect('/');
+            res.redirect('/home'); // Redirect to /home instead of /
         } else {
             res.render('index.ejs');
         }
     } catch (error) {
-        console.log("Error in getSignup controller", error);
+        console.log("Error in getIndex controller", error);
         if (!res.headersSent) {
             res.status(500).send('Internal Server Error');
         }
     }
 };
 
-const getSignupPage = async (req: Request, res: Response) => {
+// const loginPage = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+//     try {
+//         let {email, password} = req.body
+//         let user = await userModel.findOne({email})
+
+//         if(!user){
+//             res.json({success: false, message: 'Email not found'})
+//             return
+//         }
+
+//         if(user.isBlocked==true){
+//             res.json({success: false, message: 'This user is currently blocked'})
+//             return
+//         }
+
+//         let isPasswordMatch = await bcrypt.compare(password, user.password)
+
+//         if(!isPasswordMatch){
+//             res.status(401).render('index', {message: 'Incorrect password'})
+//             return
+//         }
+
+//         req.session.user = user.id
+//         res.redirect('/home')
+//     } catch (error) {
+//         console.error("Error in login page controller ", error);
+//         next(error);
+//     }
+// }
+
+const loginPage = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+        const { email, password } = req.body;
+        const user = await userModel.findOne({ email });
+
+        if (!user) {
+            res.status(404).json({ success: false, message: 'Email not found' });
+            return;
+        }
+
+        if (user.isBlocked === true) {
+            res.status(403).json({ success: false, message: 'This user is currently blocked' });
+            return;
+        }
+
+        const isPasswordMatch = await bcrypt.compare(password, user.password);
+
+        if (!isPasswordMatch) {
+            res.status(401).json({ success: false, message: 'Incorrect password' });
+            return;
+        }
+
+        req.session.user = user._id; // Use _id for MongoDB consistency
+        res.status(200).json({ success: true, redirect: '/home' });
+    } catch (error) {
+        console.error("Error in login page controller ", error);
+        next(error);
+    }
+};
+
+const getSignupPage = async (req: Request, res: Response): Promise<void> => {
     try {
         if (req.session.user) {
-            return res.redirect('/');
+            res.redirect('/home'); // Redirect to /home instead of /
         } else {
-            return res.render('signup');
+            res.render('signup.ejs'); // Ensure filename matches
         }
     } catch (error) {
         console.log("Error in getSignupPage controller", error);
-        res.status(500).send('Internal Server Error');
+        if (!res.headersSent) {
+            res.status(500).send('Internal Server Error');
+        }
     }
 };
 
@@ -82,28 +144,29 @@ const securePassword = async (password: string): Promise<string> => {
     }
 };
 
-const getHome = async (req: Request, res: Response) => {
+const getHome = async (req: Request, res: Response): Promise<void> => {
     try {
-        if(req.session.user){
-            let userData = await userModel.findById(req.session.user)
+        if (req.session.user) {
+            let userData = await userModel.findById(req.session.user);
             console.log(userData, "userData: ");
 
-            if(userData){
-                res.render('home', {user: userData})
-            }else{
-                res.redirect('/')
+            if (userData) {
+                res.render('home.ejs', { user: userData }); // Ensure filename matches
+            } else {
+                res.redirect('/');
             }
-        }else{
-            res.redirect('/')
+        } else {
+            res.redirect('/');
         }
     } catch (error) {
         console.log("Error in home page controller", error);
-        res.redirect('/')
+        res.redirect('/');
     }
-}
+};
 
 export default {
     getIndex,
+    loginPage,
     getSignupPage,
     signup,
     getHome,

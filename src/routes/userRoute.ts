@@ -6,6 +6,7 @@ import auth from "../middleware/auth"
 let router = Router()
 
 router.get('/', userController.getIndex)
+router.post('/login', userController.loginPage)
 router.get('/signup',userController.getSignupPage)
 router.post('/signup', userController.signup)
 router.get('/home', auth.userAuth,userController.getHome)

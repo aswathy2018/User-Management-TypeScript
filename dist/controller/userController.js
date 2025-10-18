@@ -50,31 +50,82 @@ const bcrypt = __importStar(require("bcrypt"));
 const getIndex = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         if (req.session.user) {
-            res.redirect('/');
+            res.redirect('/home'); // Redirect to /home instead of /
         }
         else {
             res.render('index.ejs');
         }
     }
     catch (error) {
-        console.log("Error in getSignup controller", error);
+        console.log("Error in getIndex controller", error);
         if (!res.headersSent) {
             res.status(500).send('Internal Server Error');
         }
     }
 });
+// const loginPage = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+//     try {
+//         let {email, password} = req.body
+//         let user = await userModel.findOne({email})
+//         if(!user){
+//             res.json({success: false, message: 'Email not found'})
+//             return
+//         }
+//         if(user.isBlocked==true){
+//             res.json({success: false, message: 'This user is currently blocked'})
+//             return
+//         }
+//         let isPasswordMatch = await bcrypt.compare(password, user.password)
+//         if(!isPasswordMatch){
+//             res.status(401).render('index', {message: 'Incorrect password'})
+//             return
+//         }
+//         req.session.user = user.id
+//         res.redirect('/home')
+//     } catch (error) {
+//         console.error("Error in login page controller ", error);
+//         next(error);
+//     }
+// }
+const loginPage = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { email, password } = req.body;
+        const user = yield userModel_1.default.findOne({ email });
+        if (!user) {
+            res.status(404).json({ success: false, message: 'Email not found' });
+            return;
+        }
+        if (user.isBlocked === true) {
+            res.status(403).json({ success: false, message: 'This user is currently blocked' });
+            return;
+        }
+        const isPasswordMatch = yield bcrypt.compare(password, user.password);
+        if (!isPasswordMatch) {
+            res.status(401).json({ success: false, message: 'Incorrect password' });
+            return;
+        }
+        req.session.user = user._id; // Use _id for MongoDB consistency
+        res.status(200).json({ success: true, redirect: '/home' });
+    }
+    catch (error) {
+        console.error("Error in login page controller ", error);
+        next(error);
+    }
+});
 const getSignupPage = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         if (req.session.user) {
-            return res.redirect('/');
+            res.redirect('/home'); // Redirect to /home instead of /
         }
         else {
-            return res.render('signup');
+            res.render('signup.ejs'); // Ensure filename matches
         }
     }
     catch (error) {
         console.log("Error in getSignupPage controller", error);
-        res.status(500).send('Internal Server Error');
+        if (!res.headersSent) {
+            res.status(500).send('Internal Server Error');
+        }
     }
 });
 const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -127,7 +178,7 @@ const getHome = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             let userData = yield userModel_1.default.findById(req.session.user);
             console.log(userData, "userData: ");
             if (userData) {
-                res.render('home', { user: userData });
+                res.render('home.ejs', { user: userData }); // Ensure filename matches
             }
             else {
                 res.redirect('/');
@@ -144,6 +195,7 @@ const getHome = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.default = {
     getIndex,
+    loginPage,
     getSignupPage,
     signup,
     getHome,

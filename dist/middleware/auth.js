@@ -16,10 +16,21 @@ const userModel_1 = __importDefault(require("../models/userModel"));
 const userAuth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         if (req.session.user) {
-            const user = yield userModel_1.default.findOne({ id: req.session.user, isAdmin: false });
+            const user = yield userModel_1.default.findOne({ _id: req.session.user, isAdmin: false });
+            if (user) {
+                next(); // Proceed to the route handler if user is found
+            }
+            else {
+                res.status(401).json({ success: false, message: 'Unauthorized: User not found' });
+            }
+        }
+        else {
+            res.status(401).json({ success: false, message: 'Unauthorized: No session user' });
         }
     }
     catch (error) {
+        console.error("Error in userAuth middleware", error);
+        res.status(500).json({ success: false, message: 'Internal Server Error' });
     }
 });
 exports.default = { userAuth };
