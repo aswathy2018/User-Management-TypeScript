@@ -23,6 +23,20 @@ const getSignup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         console.log("Error in getSignup controller", error);
     }
 });
+const getSignupPage = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        if (req.session.user) {
+            return res.redirect('/');
+        }
+        else {
+            return res.render('signup');
+        }
+    }
+    catch (error) {
+        console.log("Error in getSignupPage controller", error);
+    }
+});
 exports.default = {
     getSignup,
+    getSignupPage,
 };

@@ -1,8 +1,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CaIN - Login</title>
-    <link rel="stylesheet" href="indStyle.css">
+    <title>User-Management</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
     * {
@@ -328,20 +327,15 @@ input:focus {
             <header>
                 <div class="logo">
                     <img src="https://api.iconify.design/mdi:shaker-outline.svg" alt="CaIN Logo" class="logo-icon">
-                    <span>CaIN</span>
+                    <span>Login</span>
                 </div>
-                <nav>
-                    <a href="#" class="nav-icon">
-                        <img src="https://api.iconify.design/mdi:close.svg" alt="Close" class="close-icon">
-                    </a>
-                </nav>
             </header>
 
             <main>
                 <div class="form-container">
                     <div id="loginForm" class="form active">
                         <h1>Welcome Back</h1>
-                        <p class="subtitle">Sign in to continue to your account</p>
+                        <p class="subtitle">Login to continue to your account</p>
 
                         <form id="signupForm">
                             <div class="input-group">
@@ -354,88 +348,14 @@ input:focus {
                                 <input type="password" id="password" placeholder="Your Password" required>
                             </div>
 
-                            <div class="remember-forgot">
-                                <label class="remember">
-                                    <input type="checkbox" id="remember">
-                                    <span>Remember me</span>
-                                </label>
-                                <a href="#" class="forgot-link" data-form="forgotForm">Forgot Password?</a>
-                            </div>
+                            <button type="submit" class="signup-btn">Login</button>
 
-                            <button type="submit" class="signup-btn">Sign In</button>
-
-                            <div class="divider">
-                                <span>or continue with</span>
-                            </div>
-
-                            <button type="button" class="google-btn">
-                                <img src="https://api.iconify.design/flat-color-icons:google.svg" alt="Google">
-                                Google
-                            </button>
+                            
 
                             <p class="login-link">
-                                Don't have an account? <a href="#" class="switch-form" data-form="registerForm">Sign Up</a>
+                                Don't have an account? <a href="/signup" class="switch-form" data-form="registerForm">Sign Up</a>
                             </p>
-                        </form>
-                    </div>
 
-                    <div id="registerForm" class="form">
-                        <h1>Create Account</h1>
-                        <p class="subtitle">Sign up to get started</p>
-
-                        <form id="registerFormElement">
-                            <div class="input-group">
-                                <img src="https://api.iconify.design/mdi:account-outline.svg" alt="Name" class="input-icon">
-                                <input type="text" id="name" placeholder="Your Name" required>
-                            </div>
-
-                            <div class="input-group">
-                                <img src="https://api.iconify.design/mdi:email-outline.svg" alt="Email" class="input-icon">
-                                <input type="email" id="registerEmail" placeholder="Your Email" required>
-                            </div>
-
-                            <div class="input-group">
-                                <img src="https://api.iconify.design/mdi:lock-outline.svg" alt="Password" class="input-icon">
-                                <input type="password" id="registerPassword" placeholder="Create Password" required>
-                            </div>
-
-                            <div class="input-group">
-                                <img src="https://api.iconify.design/mdi:lock-check-outline.svg" alt="Confirm Password" class="input-icon">
-                                <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
-                            </div>
-
-                            <button type="submit" class="signup-btn">Create Account</button>
-
-                            <div class="divider">
-                                <span>or continue with</span>
-                            </div>
-
-                            <button type="button" class="google-btn">
-                                <img src="https://api.iconify.design/flat-color-icons:google.svg" alt="Google">
-                                Google
-                            </button>
-
-                            <p class="login-link">
-                                Already have an account? <a href="#" class="switch-form" data-form="loginForm">Sign In</a>
-                            </p>
-                        </form>
-                    </div>
-
-                    <div id="forgotForm" class="form">
-                        <h1>Reset Password</h1>
-                        <p class="subtitle">Enter your email to reset your password</p>
-
-                        <form id="resetPasswordForm">
-                            <div class="input-group">
-                                <img src="https://api.iconify.design/mdi:email-outline.svg" alt="Email" class="input-icon">
-                                <input type="email" id="resetEmail" placeholder="Your Email" required>
-                            </div>
-
-                            <button type="submit" class="signup-btn">Send Reset Link</button>
-
-                            <p class="login-link">
-                                Remember your password? <a href="#" class="switch-form" data-form="loginForm">Sign In</a>
-                            </p>
                         </form>
                     </div>
                 </div>

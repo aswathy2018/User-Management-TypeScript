@@ -15,6 +15,20 @@ const getSignup = async (req: Request, res: Response) => {
     }
 }
 
+const getSignupPage = async(req:Request, res: Response) =>{
+    try {
+        if(req.session.user){
+            return res.redirect('/')
+        }else{
+            return res.render('signup')
+        }
+    } catch (error) {
+        console.log("Error in getSignupPage controller", error);
+        
+    }
+}
+
 export default {
     getSignup,
+    getSignupPage,
 }
