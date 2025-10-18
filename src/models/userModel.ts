@@ -25,11 +25,6 @@ let userSchema = new mongoose.Schema<user>({
         required: true
     },
 
-    phone: {
-        type: Number,
-        required: true
-    },
-
     isAdmin: {
         type: Boolean,
         required: true

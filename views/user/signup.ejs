@@ -323,6 +323,18 @@
             position: relative;
             min-height: 400px;
         }
+
+        #nameError,
+        #emailError,
+        #passwordError,
+        #confirmPasswordError {
+            color: red;
+            font-size: 12px;
+            display: block;
+            margin-top: 5px;
+            margin-left: 5px;
+            min-height: 18px;
+        }
     </style>
 </head>
 <body>
@@ -343,19 +355,19 @@
                         <form id="registerFormElement">
                             <div class="input-group">
                                 <img src="https://api.iconify.design/mdi:account-outline.svg" alt="Name" class="input-icon">
-                                <input type="text" id="name" placeholder="Your Name" required>
+                                <input type="text" id="name" placeholder="Your Name">
                             </div>
                             <div class="input-group">
                                 <img src="https://api.iconify.design/mdi:email-outline.svg" alt="Email" class="input-icon">
-                                <input type="email" id="registerEmail" placeholder="Your Email" required>
+                                <input type="email" id="registerEmail" placeholder="Your Email">
                             </div>
                             <div class="input-group">
                                 <img src="https://api.iconify.design/mdi:lock-outline.svg" alt="Password" class="input-icon">
-                                <input type="password" id="registerPassword" placeholder="Create Password" required>
+                                <input type="password" id="registerPassword" placeholder="Create Password">
                             </div>
                             <div class="input-group">
                                 <img src="https://api.iconify.design/mdi:lock-check-outline.svg" alt="Confirm Password" class="input-icon">
-                                <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
+                                <input type="password" id="confirmPassword" placeholder="Confirm Password">
                             </div>
                             <button type="submit" class="signup-btn">Create Account</button>
                             <p class="login-link">
@@ -368,5 +380,220 @@
         </div>
     </div>
     <script src="authPage.js"></script>
+
+    <script>
+        const form = document.getElementById('registerFormElement');
+            const nameInput = document.getElementById('name');
+            const emailInput = document.getElementById('registerEmail');
+            const passwordInput = document.getElementById('registerPassword');
+            const confirmPasswordInput = document.getElementById('confirmPassword');
+
+            // Create error message elements
+            function createErrorElements() {
+                const fields = [
+                    { input: nameInput, errorId: 'nameError' },
+                    { input: emailInput, errorId: 'emailError' },
+                    { input: passwordInput, errorId: 'passwordError' },
+                    { input: confirmPasswordInput, errorId: 'confirmPasswordError' }
+                ];
+
+                fields.forEach(field => {
+                    if (!document.getElementById(field.errorId)) {
+                        const errorSpan = document.createElement('span');
+                        errorSpan.id = field.errorId;
+                        errorSpan.style.color = 'red';
+                        errorSpan.style.fontSize = '12px';
+                        errorSpan.style.display = 'block';
+                        errorSpan.style.marginTop = '5px';
+                        errorSpan.style.marginLeft = '5px';
+                        field.input.parentElement.parentElement.insertBefore(errorSpan, field.input.parentElement.nextSibling);
+                    }
+                });
+            }
+
+            createErrorElements();
+
+            const nameError = document.getElementById('nameError');
+            const emailError = document.getElementById('emailError');
+            const passwordError = document.getElementById('passwordError');
+            const confirmPasswordError = document.getElementById('confirmPasswordError');
+
+            // Validation functions
+            function validateName(name) {
+                if (!name.trim()) {
+                    return 'Name is required';
+                }
+                if (name.trim().length === 0) {
+                    return 'Name cannot contain only spaces';
+                }
+                if (!/^[A-Za-z\s]+$/.test(name)) {
+                    return 'Name should contain only letters';
+                }
+                if (!/^[A-Z]/.test(name.trim())) {
+                    return 'Name must start with a capital letter';
+                }
+                if (/\s{2,}/.test(name)) {
+                    return 'Name cannot contain continuous spaces';
+                }
+                return '';
+            }
+
+            function validateEmail(email) {
+                if (!email.trim()) {
+                    return 'Email is required';
+                }
+                if (email.trim().length === 0) {
+                    return 'Email cannot contain only spaces';
+                }
+                if (/^\d+$/.test(email)) {
+                    return 'Email cannot contain only numbers';
+                }
+                if (/^[^a-zA-Z0-9]+$/.test(email)) {
+                    return 'Email cannot contain only special characters';
+                }
+                const emailRegex = /^[a-z][a-z0-9]*@[a-z]+\.com$/;
+                if (!emailRegex.test(email)) {
+                    return 'Invalid email format (e.g., aswathy123@gmail.com)';
+                }
+                return '';
+            }
+
+            function validatePassword(password) {
+                if (!password) {
+                    return 'Password is required';
+                }
+                if (password.length < 4) {
+                    return 'Password must be at least 4 characters long';
+                }
+                if (/\s/.test(password)) {
+                    return 'Password cannot contain spaces';
+                }
+                if (!/[A-Z]/.test(password)) {
+                    return 'Password must contain at least one capital letter';
+                }
+                if (!/[0-9]/.test(password)) {
+                    return 'Password must contain at least one number';
+                }
+                if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
+                    return 'Password must contain at least one special character';
+                }
+                return '';
+            }
+
+            function validateConfirmPassword(password, confirmPassword) {
+                if (!confirmPassword) {
+                    return 'Please confirm your password';
+                }
+                if (password !== confirmPassword) {
+                    return 'Passwords do not match';
+                }
+                return '';
+            }
+
+            // Real-time validation
+            nameInput.addEventListener('blur', function () {
+                const error = validateName(this.value);
+                nameError.textContent = error;
+            });
+
+            nameInput.addEventListener('input', function () {
+                if (nameError.textContent) {
+                    const error = validateName(this.value);
+                    nameError.textContent = error;
+                }
+            });
+
+            emailInput.addEventListener('blur', function () {
+                const error = validateEmail(this.value);
+                emailError.textContent = error;
+            });
+
+            emailInput.addEventListener('input', function () {
+                if (emailError.textContent) {
+                    const error = validateEmail(this.value);
+                    emailError.textContent = error;
+                }
+            });
+
+            passwordInput.addEventListener('blur', function () {
+                const error = validatePassword(this.value);
+                passwordError.textContent = error;
+            });
+
+            passwordInput.addEventListener('input', function () {
+                if (passwordError.textContent) {
+                    const error = validatePassword(this.value);
+                    passwordError.textContent = error;
+                }
+                if (confirmPasswordInput.value) {
+                    const confirmError = validateConfirmPassword(this.value, confirmPasswordInput.value);
+                    confirmPasswordError.textContent = confirmError;
+                }
+            });
+
+            confirmPasswordInput.addEventListener('blur', function () {
+                const error = validateConfirmPassword(passwordInput.value, this.value);
+                confirmPasswordError.textContent = error;
+            });
+
+            confirmPasswordInput.addEventListener('input', function () {
+                if (confirmPasswordError.textContent) {
+                    const error = validateConfirmPassword(passwordInput.value, this.value);
+                    confirmPasswordError.textContent = error;
+                }
+            });
+
+            // Form submission
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                // Validate all fields
+                const nameErr = validateName(nameInput.value);
+                const emailErr = validateEmail(emailInput.value);
+                const passwordErr = validatePassword(passwordInput.value);
+                const confirmPasswordErr = validateConfirmPassword(passwordInput.value, confirmPasswordInput.value);
+
+                // Display errors
+                nameError.textContent = nameErr;
+                emailError.textContent = emailErr;
+                passwordError.textContent = passwordErr;
+                confirmPasswordError.textContent = confirmPasswordErr;
+
+                // If no errors, submit the form
+                if (!nameErr && !emailErr && !passwordErr && !confirmPasswordErr) {
+                    const formData = {
+                        name: nameInput.value.trim(),
+                        email: emailInput.value.trim(),
+                        password: passwordInput.value
+                    };
+
+                    fetch('/signup', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(formData)
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                window.location.href = '/';
+                            } else {
+                                // Handle specific backend errors
+                                if (data.message.includes('email is already registered')) {
+                                    emailError.textContent = data.message;
+                                    emailError.style.display = 'block';
+                                } else {
+                                    alert(data.message || 'Registration failed. Please try again.');
+                                }
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert('An error occurred. Please try again.');
+                        });
+                }
+            });
+    </script>
 </body>
 </html>
