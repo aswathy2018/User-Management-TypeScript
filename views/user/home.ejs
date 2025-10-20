@@ -222,7 +222,10 @@ nav{
         </div>
         <ul class="nav-links">
             <li><a href="#">Home</a></li>
-            <li><button class="login-button" href="#">Logout</button></li>
+            <li>
+                <form action="/logout" method="post">
+                    <button type="submit" class="login-button">Logout</button>
+                </form></li>
         </ul>
     </nav>
     

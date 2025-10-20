@@ -380,135 +380,336 @@
     </div>
     <script src="authPage.js"></script>
 
-    <script>
+    <!-- <script>
         const form = document.getElementById('registerFormElement');
-const nameInput = document.getElementById('name');
-const emailInput = document.getElementById('registerEmail');
-const passwordInput = document.getElementById('registerPassword');
-const confirmPasswordInput = document.getElementById('confirmPassword');
+        const nameInput = document.getElementById('name');
+        const emailInput = document.getElementById('registerEmail');
+        const passwordInput = document.getElementById('registerPassword');
+        const confirmPasswordInput = document.getElementById('confirmPassword');
 
-// Create error message elements
-function createErrorElements() {
-    const fields = [
-        { input: nameInput, errorId: 'nameError' },
-        { input: emailInput, errorId: 'emailError' },
-        { input: passwordInput, errorId: 'passwordError' },
-        { input: confirmPasswordInput, errorId: 'confirmPasswordError' }
-    ];
+        // Create error message elements
+        function createErrorElements() {
+            const fields = [
+                { input: nameInput, errorId: 'nameError' },
+                { input: emailInput, errorId: 'emailError' },
+                { input: passwordInput, errorId: 'passwordError' },
+                { input: confirmPasswordInput, errorId: 'confirmPasswordError' }
+            ];
 
-    fields.forEach(field => {
-        if (!document.getElementById(field.errorId)) {
-            const errorSpan = document.createElement('span');
-            errorSpan.id = field.errorId;
-            errorSpan.style.color = 'red';
-            errorSpan.style.fontSize = '12px';
-            errorSpan.style.display = 'none'; // Initially hidden
-            errorSpan.style.marginTop = '5px';
-            errorSpan.style.marginLeft = '5px';
-            field.input.parentElement.parentElement.insertBefore(errorSpan, field.input.parentElement.nextSibling);
+            fields.forEach(field => {
+                if (!document.getElementById(field.errorId)) {
+                    const errorSpan = document.createElement('span');
+                    errorSpan.id = field.errorId;
+                    errorSpan.style.color = 'red';
+                    errorSpan.style.fontSize = '12px';
+                    errorSpan.style.display = 'none'; // Initially hidden
+                    errorSpan.style.marginTop = '5px';
+                    errorSpan.style.marginLeft = '5px';
+                    field.input.parentElement.parentElement.insertBefore(errorSpan, field.input.parentElement.nextSibling);
+                }
+            });
         }
-    });
-}
 
-createErrorElements();
+        createErrorElements();
 
-const nameError = document.getElementById('nameError');
-const emailError = document.getElementById('emailError');
-const passwordError = document.getElementById('passwordError');
-const confirmPasswordError = document.getElementById('confirmPasswordError');
+        const nameError = document.getElementById('nameError');
+        const emailError = document.getElementById('emailError');
+        const passwordError = document.getElementById('passwordError');
+        const confirmPasswordError = document.getElementById('confirmPasswordError');
 
-// Validation functions
-function validateName(name) {
-    if (!name.trim()) {
-        return 'Name is required';
-    }
-    if (name.trim().length === 0) {
-        return 'Name cannot contain only spaces';
-    }
-    if (!/^[A-Za-z\s]+$/.test(name)) {
-        return 'Name should contain only letters';
-    }
-    if (!/^[A-Z]/.test(name.trim())) {
-        return 'Name must start with a capital letter';
-    }
-    if (/\s{2,}/.test(name)) {
-        return 'Name cannot contain continuous spaces';
-    }
-    return '';
-}
+        // Validation functions
+        function validateName(name) {
+            if (!name.trim()) {
+                return 'Name is required';
+            }
+            if (name.trim().length === 0) {
+                return 'Name cannot contain only spaces';
+            }
+            if (!/^[A-Za-z\s]+$/.test(name)) {
+                return 'Name should contain only letters';
+            }
+            if (!/^[A-Z]/.test(name.trim())) {
+                return 'Name must start with a capital letter';
+            }
+            if (/\s{2,}/.test(name)) {
+                return 'Name cannot contain continuous spaces';
+            }
+            return '';
+        }
 
-function validateEmail(email) {
-    if (!email.trim()) {
-        return 'Email is required';
-    }
-    if (email.trim().length === 0) {
-        return 'Email cannot contain only spaces';
-    }
-    if (/^\d+$/.test(email)) {
-        return 'Email cannot contain only numbers';
-    }
-    if (/^[^a-zA-Z0-9]+$/.test(email)) {
-        return 'Email cannot contain only special characters';
-    }
-    const emailRegex = /^[a-z][a-z0-9]*@[a-z]+\.com$/;
-    if (!emailRegex.test(email)) {
-        return 'Invalid email format (e.g., aswathy123@gmail.com)';
-    }
-    return '';
-}
+        function validateEmail(email) {
+            if (!email.trim()) {
+                return 'Email is required';
+            }
+            if (email.trim().length === 0) {
+                return 'Email cannot contain only spaces';
+            }
+            if (/^\d+$/.test(email)) {
+                return 'Email cannot contain only numbers';
+            }
+            if (/^[^a-zA-Z0-9]+$/.test(email)) {
+                return 'Email cannot contain only special characters';
+            }
+            const emailRegex = /^[a-z][a-z0-9]*@[a-z]+\.com$/;
+            if (!emailRegex.test(email)) {
+                return 'Invalid email format (e.g., aswathy123@gmail.com)';
+            }
+            return '';
+        }
 
-function validatePassword(password) {
-    if (!password) {
-        return 'Password is required';
-    }
-    if (password.length < 4) {
-        return 'Password must be at least 4 characters long';
-    }
-    if (/\s/.test(password)) {
-        return 'Password cannot contain spaces';
-    }
-    if (!/[A-Z]/.test(password)) {
-        return 'Password must contain at least one capital letter';
-    }
-    if (!/[0-9]/.test(password)) {
-        return 'Password must contain at least one number';
-    }
-    if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
-        return 'Password must contain at least one special character';
-    }
-    return '';
-}
+        function validatePassword(password) {
+            if (!password) {
+                return 'Password is required';
+            }
+            if (password.length < 4) {
+                return 'Password must be at least 4 characters long';
+            }
+            if (/\s/.test(password)) {
+                return 'Password cannot contain spaces';
+            }
+            if (!/[A-Z]/.test(password)) {
+                return 'Password must contain at least one capital letter';
+            }
+            if (!/[0-9]/.test(password)) {
+                return 'Password must contain at least one number';
+            }
+            if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
+                return 'Password must contain at least one special character';
+            }
+            return '';
+        }
 
-function validateConfirmPassword(password, confirmPassword) {
-    if (!confirmPassword) {
-        return 'Please confirm your password';
-    }
-    if (password !== confirmPassword) {
-        return 'Passwords do not match';
-    }
-    return '';
-}
+        function validateConfirmPassword(password, confirmPassword) {
+            if (!confirmPassword) {
+                return 'Please confirm your password';
+            }
+            if (password !== confirmPassword) {
+                return 'Passwords do not match';
+            }
+            return '';
+        }
 
-// Real-time validation
-[nameInput, emailInput, passwordInput, confirmPasswordInput].forEach(input => {
-    input.addEventListener('blur', function () {
-        const errorId = this.id + 'Error';
-        const errorElement = document.getElementById(errorId);
-        const validator = {
-            name: validateName,
-            registerEmail: validateEmail,
-            registerPassword: validatePassword,
-            confirmPassword: () => validateConfirmPassword(passwordInput.value, confirmPasswordInput.value)
-        }[this.id];
-        const error = validator(this.value);
-        errorElement.textContent = error;
-        errorElement.style.display = error ? 'block' : 'none';
-    });
+        // Real-time validation
+        [nameInput, emailInput, passwordInput, confirmPasswordInput].forEach(input => {
+            input.addEventListener('blur', function () {
+                const errorId = this.id + 'Error';
+                const errorElement = document.getElementById(errorId);
+                const validator = {
+                    name: validateName,
+                    registerEmail: validateEmail,
+                    registerPassword: validatePassword,
+                    confirmPassword: () => validateConfirmPassword(passwordInput.value, confirmPasswordInput.value)
+                }[this.id];
+                const error = validator(this.value);
+                errorElement.textContent = error;
+                errorElement.style.display = error ? 'block' : 'none';
+            });
 
-    input.addEventListener('input', function () {
-        const errorId = this.id + 'Error';
-        const errorElement = document.getElementById(errorId);
-        if (errorElement.textContent) {
+            input.addEventListener('input', function () {
+                const errorId = this.id + 'Error';
+                const errorElement = document.getElementById(errorId);
+                if (errorElement.textContent) {
+                    const validator = {
+                        name: validateName,
+                        registerEmail: validateEmail,
+                        registerPassword: validatePassword,
+                        confirmPassword: () => validateConfirmPassword(passwordInput.value, confirmPasswordInput.value)
+                    }[this.id];
+                    const error = validator(this.value);
+                    errorElement.textContent = error;
+                    errorElement.style.display = error ? 'block' : 'none';
+                }
+            });
+        });
+
+        // Form submission
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            // Validate all fields
+            const nameErr = validateName(nameInput.value);
+            const emailErr = validateEmail(emailInput.value);
+            const passwordErr = validatePassword(passwordInput.value);
+            const confirmPasswordErr = validateConfirmPassword(passwordInput.value, confirmPasswordInput.value);
+
+            // Display errors
+            nameError.textContent = nameErr;
+            emailError.textContent = emailErr;
+            passwordError.textContent = passwordErr;
+            confirmPasswordError.textContent = confirmPasswordErr;
+
+            nameError.style.display = nameErr ? 'block' : 'none';
+            emailError.style.display = emailErr ? 'block' : 'none';
+            passwordError.style.display = passwordErr ? 'block' : 'none';
+            confirmPasswordError.style.display = confirmPasswordErr ? 'block' : 'none';
+
+            // If no errors, submit the form
+            if (!nameErr && !emailErr && !passwordErr && !confirmPasswordErr) {
+                const formData = {
+                    name: nameInput.value.trim(),
+                    email: emailInput.value.trim(),
+                    password: passwordInput.value
+                };
+
+                fetch('/signup', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            window.location.href = data.redirect || '/home'; // Prioritize redirect from response, fallback to /home
+                        } else {
+                            if (data.message.includes('email is already registered')) {
+                                emailError.textContent = data.message;
+                                emailError.style.display = 'block';
+                            } else {
+                                alert(data.message || 'Registration failed. Please try again.');
+                            }
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('An error occurred. Please try again.');
+                    });
+            }
+        });
+
+        window.addEventListener('load', async () => {
+            try {
+                const response = await fetch('/check-auth', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                const data = await response.json();
+                if (data.isAuthenticated) {
+                    window.location.href = '/home';
+                }
+            } catch (error) {
+                console.error('Error checking auth status:', error);
+            }
+        });
+    </script> -->
+
+    <script>
+    const form = document.getElementById('registerFormElement');
+    const nameInput = document.getElementById('name');
+    const emailInput = document.getElementById('registerEmail');
+    const passwordInput = document.getElementById('registerPassword');
+    const confirmPasswordInput = document.getElementById('confirmPassword');
+
+    // Create error message elements
+    function createErrorElements() {
+        const fields = [
+            { input: nameInput, errorId: 'nameError' },
+            { input: emailInput, errorId: 'emailError' },
+            { input: passwordInput, errorId: 'passwordError' },
+            { input: confirmPasswordInput, errorId: 'confirmPasswordError' }
+        ];
+
+        fields.forEach(field => {
+            if (!document.getElementById(field.errorId)) {
+                const errorSpan = document.createElement('span');
+                errorSpan.id = field.errorId;
+                errorSpan.style.color = 'red';
+                errorSpan.style.fontSize = '12px';
+                errorSpan.style.display = 'none';
+                errorSpan.style.marginTop = '5px';
+                errorSpan.style.marginLeft = '5px';
+                field.input.parentElement.parentElement.insertBefore(errorSpan, field.input.parentElement.nextSibling);
+            }
+        });
+    }
+
+    createErrorElements();
+
+    const nameError = document.getElementById('nameError');
+    const emailError = document.getElementById('emailError');
+    const passwordError = document.getElementById('passwordError');
+    const confirmPasswordError = document.getElementById('confirmPasswordError');
+
+    // Validation functions (unchanged)
+    function validateName(name) {
+        if (!name.trim()) {
+            return 'Name is required';
+        }
+        if (name.trim().length === 0) {
+            return 'Name cannot contain only spaces';
+        }
+        if (!/^[A-Za-z\s]+$/.test(name)) {
+            return 'Name should contain only letters';
+        }
+        if (!/^[A-Z]/.test(name.trim())) {
+            return 'Name must start with a capital letter';
+        }
+        if (/\s{2,}/.test(name)) {
+            return 'Name cannot contain continuous spaces';
+        }
+        return '';
+    }
+
+    function validateEmail(email) {
+        if (!email.trim()) {
+            return 'Email is required';
+        }
+        if (email.trim().length === 0) {
+            return 'Email cannot contain only spaces';
+        }
+        if (/^\d+$/.test(email)) {
+            return 'Email cannot contain only numbers';
+        }
+        if (/^[^a-zA-Z0-9]+$/.test(email)) {
+            return 'Email cannot contain only special characters';
+        }
+        const emailRegex = /^[a-z][a-z0-9]*@[a-z]+\.com$/;
+        if (!emailRegex.test(email)) {
+            return 'Invalid email format (e.g., aswathy123@gmail.com)';
+        }
+        return '';
+    }
+
+    function validatePassword(password) {
+        if (!password) {
+            return 'Password is required';
+        }
+        if (password.length < 4) {
+            return 'Password must be at least 4 characters long';
+        }
+        if (/\s/.test(password)) {
+            return 'Password cannot contain spaces';
+        }
+        if (!/[A-Z]/.test(password)) {
+            return 'Password must contain at least one capital letter';
+        }
+        if (!/[0-9]/.test(password)) {
+            return 'Password must contain at least one number';
+        }
+        if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
+            return 'Password must contain at least one special character';
+        }
+        return '';
+    }
+
+    function validateConfirmPassword(password, confirmPassword) {
+        if (!confirmPassword) {
+            return 'Please confirm your password';
+        }
+        if (password !== confirmPassword) {
+            return 'Passwords do not match';
+        }
+        return '';
+    }
+
+    // Real-time validation (unchanged)
+    [nameInput, emailInput, passwordInput, confirmPasswordInput].forEach(input => {
+        input.addEventListener('blur', function () {
+            const errorId = this.id + 'Error';
+            const errorElement = document.getElementById(errorId);
             const validator = {
                 name: validateName,
                 registerEmail: validateEmail,
@@ -518,65 +719,108 @@ function validateConfirmPassword(password, confirmPassword) {
             const error = validator(this.value);
             errorElement.textContent = error;
             errorElement.style.display = error ? 'block' : 'none';
+        });
+
+        input.addEventListener('input', function () {
+            const errorId = this.id + 'Error';
+            const errorElement = document.getElementById(errorId);
+            if (errorElement.textContent) {
+                const validator = {
+                    name: validateName,
+                    registerEmail: validateEmail,
+                    registerPassword: validatePassword,
+                    confirmPassword: () => validateConfirmPassword(passwordInput.value, confirmPasswordInput.value)
+                }[this.id];
+                const error = validator(this.value);
+                errorElement.textContent = error;
+                errorElement.style.display = error ? 'block' : 'none';
+            }
+        });
+    });
+
+    // Form submission
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        // Validate all fields
+        const nameErr = validateName(nameInput.value);
+        const emailErr = validateEmail(emailInput.value);
+        const passwordErr = validatePassword(passwordInput.value);
+        const confirmPasswordErr = validateConfirmPassword(passwordInput.value, confirmPasswordInput.value);
+
+        // Display errors
+        nameError.textContent = nameErr;
+        emailError.textContent = emailErr;
+        passwordError.textContent = passwordErr;
+        confirmPasswordError.textContent = confirmPasswordErr;
+
+        nameError.style.display = nameErr ? 'block' : 'none';
+        emailError.style.display = emailErr ? 'block' : 'none';
+        passwordError.style.display = passwordErr ? 'block' : 'none';
+        confirmPasswordError.style.display = confirmPasswordErr ? 'block' : 'none';
+
+        // If no errors, submit the form
+        if (!nameErr && !emailErr && !passwordErr && !confirmPasswordErr) {
+            const formData = {
+                name: nameInput.value.trim(),
+                email: emailInput.value.trim(),
+                password: passwordInput.value
+            };
+
+            fetch('/signup', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.href = data.redirect || '/home'; // Use server-provided redirect
+                    } else {
+                        // Map server errors to fields where possible
+                        if (data.message.includes('email is already registered')) {
+                            emailError.textContent = data.message;
+                            emailError.style.display = 'block';
+                        } else if (data.message.includes('All fields are required')) {
+                            // Display error across all fields or in a general error area
+                            nameError.textContent = data.message;
+                            emailError.textContent = data.message;
+                            passwordError.textContent = data.message;
+                            nameError.style.display = 'block';
+                            emailError.style.display = 'block';
+                            passwordError.style.display = 'block';
+                        } else {
+                            alert(data.message || 'Registration failed. Please try again.');
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error during signup:', error);
+                    alert('An error occurred during signup. Please try again.');
+                });
         }
     });
-});
 
-// Form submission
-form.addEventListener('submit', function (e) {
-    e.preventDefault();
-
-    // Validate all fields
-    const nameErr = validateName(nameInput.value);
-    const emailErr = validateEmail(emailInput.value);
-    const passwordErr = validatePassword(passwordInput.value);
-    const confirmPasswordErr = validateConfirmPassword(passwordInput.value, confirmPasswordInput.value);
-
-    // Display errors
-    nameError.textContent = nameErr;
-    emailError.textContent = emailErr;
-    passwordError.textContent = passwordErr;
-    confirmPasswordError.textContent = confirmPasswordErr;
-
-    nameError.style.display = nameErr ? 'block' : 'none';
-    emailError.style.display = emailErr ? 'block' : 'none';
-    passwordError.style.display = passwordErr ? 'block' : 'none';
-    confirmPasswordError.style.display = confirmPasswordErr ? 'block' : 'none';
-
-    // If no errors, submit the form
-    if (!nameErr && !emailErr && !passwordErr && !confirmPasswordErr) {
-        const formData = {
-            name: nameInput.value.trim(),
-            email: emailInput.value.trim(),
-            password: passwordInput.value
-        };
-
-        fetch('/signup', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formData)
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                window.location.href = data.redirect || '/home'; // Prioritize redirect from response, fallback to /home
-            } else {
-                if (data.message.includes('email is already registered')) {
-                    emailError.textContent = data.message;
-                    emailError.style.display = 'block';
-                } else {
-                    alert(data.message || 'Registration failed. Please try again.');
+    // Check auth status on page load (unchanged)
+    window.addEventListener('load', async () => {
+        try {
+            const response = await fetch('/check-auth', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
                 }
+            });
+            const data = await response.json();
+            if (data.isAuthenticated) {
+                window.location.href = '/home';
             }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('An error occurred. Please try again.');
-        });
-    }
-});
-    </script>
+        } catch (error) {
+            console.error('Error checking auth status:', error);
+        }
+    });
+</script>
+
 </body>
 </html>
