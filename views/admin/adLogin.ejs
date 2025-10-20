@@ -152,30 +152,116 @@ button {
 .register p a:hover {
   text-decoration: underline;
 }
+
+.error-message {
+            color: #ff4444;
+            font-size: 0.85em;
+            margin-top: 5px;
+            display: none;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .server-message {
+            color: #ff4444;
+            font-size: 0.9em;
+            text-align: center;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: rgba(255, 68, 68, 0.2);
+            border-radius: 5px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
 </style>
 <body>
     <section>
-  <div class="form-box">
-    <div class="form-value">
-      <form action="">
-        <h2>Admin Login</h2>
-        <div class="inputbox">
-          <ion-icon name="mail-outline"></ion-icon>
-          <input type="text">
-          <label for="">Username</label>
+        <div class="form-box">
+            <div class="form-value">
+                <form id="loginForm" action="/admin/login" method="post">
+                    <h2>Admin Login</h2>
+                    
+                    <% if (message) { %>
+                        <div class="server-message"><%= message %></div>
+                    <% } %>
+                    
+                    <div class="inputbox">
+                        <ion-icon name="mail-outline"></ion-icon>
+                        <input type="text" name="email" id="email">
+                        <label>Email</label>
+                    </div>
+                    <div class="error-message" id="email-error"></div>
+                    
+                    <div class="inputbox">
+                        <ion-icon name="lock-closed-outline"></ion-icon>
+                        <input type="password" name="password" id="password">
+                        <label>Password</label>
+                    </div>
+                    <div class="error-message" id="password-error"></div>
+                    
+                    <button type="submit">Log in</button>
+                </form>
+            </div>
         </div>
-        <div class="inputbox">
-          <ion-icon name="lock-closed-outline"></ion-icon>
-          <input type="password">
-          <label for="">Password</label>
-        </div>
-        
-        <button>Log in</button>
-      </form>
-    </div>
-  </div>
-</section>
-<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-        <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    </section>
+
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            let isValid = true;
+
+            // Reset error messages
+            document.getElementById('email-error').style.display = 'none';
+            document.getElementById('password-error').style.display = 'none';
+
+            // Email validation
+            const email = document.getElementById('email').value.trim();
+            const emailRegex = /^[a-zA-Z][a-zA-Z0-9]*@[^\s@]+\.[^\s@]+$/;
+            
+            if (!email) {
+                document.getElementById('email-error').textContent = 'Email is mandatory';
+                document.getElementById('email-error').style.display = 'block';
+                isValid = false;
+            } else if (email.includes(' ')) {
+                document.getElementById('email-error').textContent = 'Email cannot contain spaces';
+                document.getElementById('email-error').style.display = 'block';
+                isValid = false;
+            } else if (!emailRegex.test(email)) {
+                document.getElementById('email-error').textContent = 'Email must start with a letter (e.g., aswathy@gmail.com)';
+                document.getElementById('email-error').style.display = 'block';
+                isValid = false;
+            }
+
+            // Password validation
+            const password = document.getElementById('password').value;
+            
+            if (!password) {
+                document.getElementById('password-error').textContent = 'Password is mandatory';
+                document.getElementById('password-error').style.display = 'block';
+                isValid = false;
+            } else if (password.includes(' ')) {
+                document.getElementById('password-error').textContent = 'Password cannot contain spaces';
+                document.getElementById('password-error').style.display = 'block';
+                isValid = false;
+            } else if (!/^[A-Z]/.test(password)) {
+                document.getElementById('password-error').textContent = 'Password must start with a capital letter';
+                document.getElementById('password-error').style.display = 'block';
+                isValid = false;
+            } else if (!/(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*])/.test(password)) {
+                document.getElementById('password-error').textContent = 'Password must contain uppercase, lowercase, number, and special character';
+                document.getElementById('password-error').style.display = 'block';
+                isValid = false;
+            } else if (password.length < 8) {
+                document.getElementById('password-error').textContent = 'Password must be at least 8 characters long';
+                document.getElementById('password-error').style.display = 'block';
+                isValid = false;
+            }
+
+            if (isValid) {
+                this.submit();
+            }
+        });
+    </script>
 </body>
 </html>

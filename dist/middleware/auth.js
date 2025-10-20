@@ -54,4 +54,22 @@ const userAuth = (req, res, next) => __awaiter(void 0, void 0, void 0, function*
         }
     }
 });
-exports.default = { userAuth };
+const adminAuth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        if (!req.session.user) {
+            return res.redirect('/admin/login');
+        }
+        const user = yield userModel_1.default.findById(req.session.user);
+        if (user && user.isAdmin) {
+            return next();
+        }
+        else {
+            return res.redirect('/admin/login');
+        }
+    }
+    catch (error) {
+        console.error("Error in adminAuth middleware:", error);
+        res.status(500).send("Internal server error");
+    }
+});
+exports.default = { userAuth, adminAuth };
