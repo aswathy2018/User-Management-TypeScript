@@ -4,6 +4,7 @@ import express, {Application, Request, Response, NextFunction} from "express";
 import path from "path";
 import session from "express-session";
 import user from "./routes/userRoute";
+import admin from "./routes/adminRoute";
 
 mongoose.connect(process.env.MONGO_URI as string)
   .then(() => console.log("MongoDB connected"))
@@ -29,7 +30,7 @@ app.set("views", [
 
 
 app.use("/", user)
-
+app.use("/admin", admin)
 
 
 app.listen(5280, ()=>{

@@ -34,7 +34,7 @@ const userAuth = (req, res, next) => __awaiter(void 0, void 0, void 0, function*
                 req.session.destroy((err) => {
                     if (err)
                         console.error("Session destroy error:", err);
-                    return res.status(401).json({ success: false, message: 'Unauthorized: User not found' });
+                    return res.redirect('/');
                 });
             }
         }
@@ -43,7 +43,7 @@ const userAuth = (req, res, next) => __awaiter(void 0, void 0, void 0, function*
             if (req.method === 'GET' && (req.path === '/' || req.path === '/signup')) {
                 return next(); // Allow access to login/signup pages
             }
-            res.status(401).json({ success: false, message: 'Unauthorized: No session user' });
+            res.redirect('/');
             return;
         }
     }

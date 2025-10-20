@@ -9,6 +9,7 @@ const express_1 = __importDefault(require("express"));
 const path_1 = __importDefault(require("path"));
 const express_session_1 = __importDefault(require("express-session"));
 const userRoute_1 = __importDefault(require("./routes/userRoute"));
+const adminRoute_1 = __importDefault(require("./routes/adminRoute"));
 mongoose_1.default.connect(process.env.MONGO_URI)
     .then(() => console.log("MongoDB connected"))
     .catch((err) => console.error("Error When Connecting MongoDB", err));
@@ -26,6 +27,7 @@ app.set("views", [
     path_1.default.join(__dirname, "../views/admin")
 ]);
 app.use("/", userRoute_1.default);
+app.use("/admin", adminRoute_1.default);
 app.listen(5280, () => {
     console.log(`http://localhost:${5280}`);
 });

@@ -21,15 +21,16 @@ const userAuth = async (req: Request, res: Response, next: NextFunction): Promis
                 // Invalid user, clear session and send unauthorized response
                 req.session.destroy((err) => {
                     if (err) console.error("Session destroy error:", err);
-                    return res.status(401).json({ success: false, message: 'Unauthorized: User not found' });
+                    return res.redirect('/');
                 });
+
             }
         } else {
             // No session - allow GET requests to login/signup pages, block others
             if (req.method === 'GET' && (req.path === '/' || req.path === '/signup')) {
                 return next(); // Allow access to login/signup pages
             }
-            res.status(401).json({ success: false, message: 'Unauthorized: No session user' });
+            res.redirect('/');
             return;
         }
     } catch (error) {
