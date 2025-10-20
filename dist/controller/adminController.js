@@ -49,6 +49,16 @@ const userModel_1 = __importDefault(require("../models/userModel"));
 const bcrypt = __importStar(require("bcrypt"));
 const loadLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        // Prevent caching of the login page
+        res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+        res.setHeader('Pragma', 'no-cache');
+        res.setHeader('Expires', '0');
+        if (req.session && req.session.user) {
+            const admin = yield userModel_1.default.findById(req.session.user);
+            if (admin && admin.isAdmin) {
+                return res.redirect('/admin');
+            }
+        }
         return res.render("adLogin.ejs", { message: null });
     }
     catch (error) {
@@ -118,14 +128,13 @@ const logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         req.session.destroy((err) => {
             if (err) {
                 console.log("Failed to destroy the session ", err);
-                res.status(500).send("Error occurred while logging out");
-                return;
+                return res.status(500).send("Error occurred while logging out");
             }
-            // Set cache-control headers for the logout response
+            // Prevent caching of post-logout pages
             res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
             res.setHeader('Pragma', 'no-cache');
             res.setHeader('Expires', '0');
-            res.redirect('/login');
+            res.redirect('/admin/login');
         });
     }
     catch (error) {

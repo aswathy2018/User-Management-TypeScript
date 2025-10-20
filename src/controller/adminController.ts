@@ -3,12 +3,25 @@ import userModel from "../models/userModel";
 import *as bcrypt from "bcrypt";
 
 const loadLogin = async (req: Request, res: Response) => {
-    try {
-        return res.render("adLogin.ejs", {message: null})
-    } catch (error) {
-        console.log("Error in loadLogin controller", error)
+  try {
+    // Prevent caching of the login page
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
+
+    if (req.session && req.session.user) {
+      const admin = await userModel.findById(req.session.user);
+      if (admin && admin.isAdmin) {
+        return res.redirect('/admin');
+      }
     }
-}
+
+    return res.render("adLogin.ejs", { message: null });
+  } catch (error) {
+    console.log("Error in loadLogin controller", error);
+  }
+};
+
 
 const login = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -84,24 +97,26 @@ let blockUser =async(req:Request,res:Response):Promise<void>=>{
 }
 
 const logout = async (req: Request, res: Response): Promise<void> => {
-    try {
-        req.session.destroy((err) => {
-            if (err) {
-                console.log("Failed to destroy the session ", err);
-                res.status(500).send("Error occurred while logging out");
-                return;
-            }
-            // Set cache-control headers for the logout response
-            res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
-            res.setHeader('Pragma', 'no-cache');
-            res.setHeader('Expires', '0');
-            res.redirect('/login');
-        });
-    } catch (error) {
-        console.error("Error in logout controller: ", error);
-        res.status(500).send("An unexpected error occurred.");
-    }
+  try {
+    req.session.destroy((err) => {
+      if (err) {
+        console.log("Failed to destroy the session ", err);
+        return res.status(500).send("Error occurred while logging out");
+      }
+
+      // Prevent caching of post-logout pages
+      res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+      res.setHeader('Pragma', 'no-cache');
+      res.setHeader('Expires', '0');
+
+      res.redirect('/admin/login');
+    });
+  } catch (error) {
+    console.error("Error in logout controller: ", error);
+    res.status(500).send("An unexpected error occurred.");
+  }
 };
+
 
 
 export default {

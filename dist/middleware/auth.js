@@ -56,6 +56,10 @@ const userAuth = (req, res, next) => __awaiter(void 0, void 0, void 0, function*
 });
 const adminAuth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        // Prevent caching of admin pages
+        res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+        res.setHeader('Pragma', 'no-cache');
+        res.setHeader('Expires', '0');
         if (!req.session.user) {
             return res.redirect('/admin/login');
         }
@@ -64,6 +68,10 @@ const adminAuth = (req, res, next) => __awaiter(void 0, void 0, void 0, function
             return next();
         }
         else {
+            req.session.destroy((err) => {
+                if (err)
+                    console.error("Session destroy error:", err);
+            });
             return res.redirect('/admin/login');
         }
     }

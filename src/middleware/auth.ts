@@ -43,21 +43,31 @@ const userAuth = async (req: Request, res: Response, next: NextFunction): Promis
 
 
 const adminAuth = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    try {
-        if (!req.session.user) {
-            return res.redirect('/admin/login');
-        }
-        const user = await userModel.findById(req.session.user);
+  try {
+    // Prevent caching of admin pages
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
 
-        if (user && user.isAdmin) {
-            return next();
-        } else {
-            return res.redirect('/admin/login');
-        }
-    } catch (error) {
-        console.error("Error in adminAuth middleware:", error);
-        res.status(500).send("Internal server error");
+    if (!req.session.user) {
+      return res.redirect('/admin/login');
     }
+
+    const user = await userModel.findById(req.session.user);
+
+    if (user && user.isAdmin) {
+      return next();
+    } else {
+      req.session.destroy((err) => {
+        if (err) console.error("Session destroy error:", err);
+      });
+      return res.redirect('/admin/login');
+    }
+  } catch (error) {
+    console.error("Error in adminAuth middleware:", error);
+    res.status(500).send("Internal server error");
+  }
 };
+
 
 export default { userAuth,adminAuth };

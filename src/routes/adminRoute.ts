@@ -12,6 +12,4 @@ router.post('/block-user/:id', auth.adminAuth, adminController.blockUser)
 router.post('/logout', adminController.logout)
 
 
-
-
 export default router;
