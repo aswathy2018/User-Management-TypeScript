@@ -1,9 +1,9 @@
-//Module augmentation allows you to extend or modify the types or behavior of an already existing module
+//it helps us to extend or modify the types or behavior of an already existing module
 
-import "express-session"
+import "express-session";
 
-declare module "express-session"{
-    interface SessionData{
-        user: any;
-    }
+declare module "express-session" {
+  interface SessionData {
+    user?: string;
+  }
 }

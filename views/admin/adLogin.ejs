@@ -215,11 +215,9 @@ button {
             e.preventDefault();
             let isValid = true;
 
-            // Reset error messages
             document.getElementById('email-error').style.display = 'none';
             document.getElementById('password-error').style.display = 'none';
 
-            // Email validation
             const email = document.getElementById('email').value.trim();
             const emailRegex = /^[a-zA-Z][a-zA-Z0-9]*@[^\s@]+\.[^\s@]+$/;
             
@@ -237,7 +235,6 @@ button {
                 isValid = false;
             }
 
-            // Password validation
             const password = document.getElementById('password').value;
             
             if (!password) {

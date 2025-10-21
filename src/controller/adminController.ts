@@ -4,7 +4,6 @@ import *as bcrypt from "bcrypt";
 
 const loadLogin = async (req: Request, res: Response) => {
   try {
-    // Prevent caching of the login page
     res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
     res.setHeader('Pragma', 'no-cache');
     res.setHeader('Expires', '0');
@@ -104,7 +103,6 @@ const logout = async (req: Request, res: Response): Promise<void> => {
         return res.status(500).send("Error occurred while logging out");
       }
 
-      // Prevent caching of post-logout pages
       res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
       res.setHeader('Pragma', 'no-cache');
       res.setHeader('Expires', '0');

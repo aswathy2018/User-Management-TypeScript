@@ -329,50 +329,6 @@ input:focus {
 
 </style>
 </head>
-<!-- <body>
-    <div class="overlay">
-        <div class="popup-container">
-            <header>
-                <div class="logo">
-                    <img src="https://api.iconify.design/mdi:shaker-outline.svg" alt="CaIN Logo" class="logo-icon">
-                    <span>Login</span>
-                </div>
-            </header>
-
-            <main>
-                <div class="form-container">
-                    <div id="loginForm" class="form active">
-                        <h1>Welcome Back</h1>
-                        <p class="subtitle">Login to continue to your account</p>
-
-                        <form id="signupForm">
-                            <div class="input-group">
-                                <img src="https://api.iconify.design/mdi:email-outline.svg" alt="Email" class="input-icon">
-                                <input type="email" id="email" placeholder="Your Email">
-                            </div>
-
-                            <div class="input-group">
-                                <img src="https://api.iconify.design/mdi:lock-outline.svg" alt="Password" class="input-icon">
-                                <input type="password" id="password" placeholder="Your Password">
-                            </div>
-
-                            <button type="submit" class="signup-btn">Login</button>
-
-                            
-
-                            <p class="login-link">
-                                Don't have an account? <a href="/signup" class="switch-form" data-form="registerForm">Sign Up</a>
-                            </p>
-
-                        </form>
-                    </div>
-                </div>
-            </main>
-        </div>
-    </div>
-    <script src="authPage.js"></script>
-</body> -->
-
 <body>
     <div class="overlay">
         <div class="popup-container">
@@ -575,7 +531,6 @@ input:focus {
     const emailError = document.getElementById('emailError');
     const passwordError = document.getElementById('passwordError');
 
-    // Validation functions (unchanged)
     function validateEmail(email) {
         if (!email.trim()) {
             return 'Email is required';
@@ -618,7 +573,6 @@ input:focus {
         return '';
     }
 
-    // Real-time validation (unchanged)
     [emailInput, passwordInput].forEach(input => {
         input.addEventListener('blur', function () {
             const errorId = this.id + 'Error';
@@ -646,22 +600,17 @@ input:focus {
             }
         });
     });
-
-    // Form submission
     form.addEventListener('submit', function (e) {
         e.preventDefault();
 
-        // Validate all fields
         const emailErr = validateEmail(emailInput.value);
         const passwordErr = validatePassword(passwordInput.value);
 
-        // Display errors
         emailError.textContent = emailErr;
         passwordError.textContent = passwordErr;
         emailError.style.display = emailErr ? 'block' : 'none';
         passwordError.style.display = passwordErr ? 'block' : 'none';
 
-        // If no errors, submit the form
         if (!emailErr && !passwordErr) {
             const formData = {
                 email: emailInput.value.trim(),
@@ -678,9 +627,8 @@ input:focus {
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        window.location.href = data.redirect || '/home'; // Use server-provided redirect
+                        window.location.href = data.redirect || '/home';
                     } else {
-                        // Map server errors to fields
                         if (data.message === 'Email not found' || data.message === 'This user is currently blocked') {
                             emailError.textContent = data.message;
                             emailError.style.display = 'block';
@@ -699,7 +647,6 @@ input:focus {
         }
     });
 
-    // Check auth status on page load (unchanged)
     window.addEventListener('load', async () => {
         try {
             const response = await fetch('/check-auth', {

@@ -163,7 +163,7 @@ const logout = async (req: Request, res: Response): Promise<void> => {
                 res.status(500).send("Error occurred while logging out");
                 return;
             }
-            // Set cache-control headers for the logout response
+            // this is setting for cache control headers
             res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
             res.setHeader('Pragma', 'no-cache');
             res.setHeader('Expires', '0');

@@ -383,7 +383,6 @@ body {
 
 </style>
 <body>
-  <!-- Navbar -->
   <nav class="navbar">
     <div class="navbar-container">
       <div class="navbar-brand">Admin Dashboard</div>
@@ -396,13 +395,9 @@ body {
     </div>
   </nav>
 
-  <!-- Main Content -->
   <main class="main-content">
     <div class="container">
-      <!-- Heading -->
       <h1 class="dashboard-heading">Users</h1>
-
-      <!-- Table Container -->
       <div class="table-wrapper">
         <table class="users-table">
           <thead>
@@ -418,7 +413,7 @@ body {
                 <tr>
                     <td>
                         <%= index + 1 %>
-                    </td> <!-- Serial number -->
+                    </td>
                     <td>
                         <%= user.name %>
                     </td>
@@ -446,7 +441,7 @@ body {
 
   <script>
     function updateStatus(userId, status, buttonElement) {
-  // Send request to update status
+
   fetch(`/api/users/${userId}/status`, {
     method: "POST",
     headers: {
@@ -457,7 +452,6 @@ body {
     .then((response) => response.json())
     .then((data) => {
       if (data.success) {
-        // Update button states
         const row = buttonElement.closest("tr")
         const buttons = row.querySelectorAll(".status-btn")
 
@@ -467,7 +461,6 @@ body {
 
         buttonElement.classList.add("active")
 
-        // Show success feedback
         console.log("Status updated successfully")
       }
     })
