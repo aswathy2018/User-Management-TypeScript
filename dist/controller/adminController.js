@@ -49,9 +49,6 @@ const userModel_1 = __importDefault(require("../models/userModel"));
 const bcrypt = __importStar(require("bcrypt"));
 const loadLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
-        res.setHeader('Pragma', 'no-cache');
-        res.setHeader('Expires', '0');
         if (req.session && req.session.user) {
             const admin = yield userModel_1.default.findById(req.session.user);
             if (admin && admin.isAdmin) {
@@ -129,9 +126,6 @@ const logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 console.log("Failed to destroy the session ", err);
                 return res.status(500).send("Error occurred while logging out");
             }
-            res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
-            res.setHeader('Pragma', 'no-cache');
-            res.setHeader('Expires', '0');
             res.redirect('/admin/login');
         });
     }

@@ -51,9 +51,6 @@ const userAuth = (req, res, next) => __awaiter(void 0, void 0, void 0, function*
 });
 const adminAuth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
-        res.setHeader('Pragma', 'no-cache');
-        res.setHeader('Expires', '0');
         if (!req.session.user) {
             return res.redirect('/admin/login');
         }

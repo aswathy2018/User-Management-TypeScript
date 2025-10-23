@@ -4,9 +4,6 @@ import *as bcrypt from "bcrypt";
 
 const loadLogin = async (req: Request, res: Response) => {
   try {
-    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
-    res.setHeader('Pragma', 'no-cache');
-    res.setHeader('Expires', '0');
 
     if (req.session && req.session.user) {
       const admin = await userModel.findById(req.session.user);
@@ -102,11 +99,6 @@ const logout = async (req: Request, res: Response): Promise<void> => {
         console.log("Failed to destroy the session ", err);
         return res.status(500).send("Error occurred while logging out");
       }
-
-      res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
-      res.setHeader('Pragma', 'no-cache');
-      res.setHeader('Expires', '0');
-
       res.redirect('/admin/login');
     });
   } catch (error) {

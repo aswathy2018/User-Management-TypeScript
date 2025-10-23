@@ -14,4 +14,6 @@ router.post('/signup', userController_1.default.signup);
 router.get('/home', auth_1.default.userAuth, userController_1.default.getHome);
 router.post('/logout', userController_1.default.logout);
 router.get('/check-auth', userController_1.default.checkAuth);
+router.get('/changePassword', auth_1.default.userAuth, userController_1.default.getEdit);
+router.post('/changePassword', auth_1.default.userAuth, userController_1.default.updatePassword);
 exports.default = router;

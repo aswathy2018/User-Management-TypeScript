@@ -11,5 +11,5 @@ router.get('/login', adminController_1.default.loadLogin);
 router.post('/login', adminController_1.default.login);
 router.get('/', auth_1.default.adminAuth, adminController_1.default.loadDashboard);
 router.post('/block-user/:id', auth_1.default.adminAuth, adminController_1.default.blockUser);
-router.post('/logout', adminController_1.default.logout);
+router.post('/logout', auth_1.default.adminAuth, adminController_1.default.logout);
 exports.default = router;

@@ -4,25 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Home page</title>
+    <title>User-Management</title>
     <style>
         *{
     margin: 0;
     padding: 0;
-    color: #a0a0a0;
     font-family: sans-serif;
     letter-spacing: 1px;
     font-weight: 300;
 }
 body{
     overflow-x: hidden;
-    background-color: #797979;
+    background-color: #ffffff;
     height: 100vh;
 }
+
 nav{
     height: 6rem;
     width: 100vw;
-    background-color: #131418;
+    background-color: #1a1f2e;
     box-shadow: 0 3px 20px rgba(0, 0, 0, 0.2);
     display: flex;
     position: fixed;
@@ -34,10 +34,6 @@ nav{
 .logo{
     padding:1vh 1vw;
     text-align: center;
-}
-.logo img {
-    height: 5rem;
-    width: 5rem;
 }
 
 /*Styling Links*/
@@ -76,7 +72,7 @@ nav{
 
 /*Styling Buttons*/
 .login-button{
-    background-color: transparent;
+    background-color: #1a1f2e;
     border: 1.5px solid #f2f5f7;
     border-radius: 2em;
     padding: 0.6rem 0.8rem;
@@ -133,6 +129,24 @@ nav{
     font-weight: 300;
     color: #f2f5f7;
     letter-spacing: 2px;
+}
+
+.edit-profile-btn {
+  margin-top: 20px;
+  padding: 10px 25px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #fff;
+  background-color: #1a1f2e;
+  border: 2px solid #1a1f2e;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.edit-profile-btn:hover {
+  background-color: #fff;
+  color: #000;
 }
 
 /*Stying for small screens*/
@@ -227,6 +241,11 @@ nav{
 </script>
 
 <body>
+    <% if (query.success === 'passwordUpdated') { %>
+    <script>
+        alert('Password updated successfully');
+    </script>
+<% } %>
     <nav>
         <div class="hamburger">
             <div class="line1"></div>
@@ -234,18 +253,20 @@ nav{
             <div class="line3"></div>
         </div>
         <ul class="nav-links">
-            <li><a href="#">Home</a></li>
+            <li style="color: #ffffff;">Home</li>
             <li>
                 <form action="/logout" method="post">
-                    <button type="submit" class="login-button">Logout</button>
+                    <button type="submit" class="login-button" style="color: #ffffff;">Logout</button>
                 </form></li>
         </ul>
     </nav>
 
     <div class="welcome-container">
-        <h1>Hi, <%= user.name %></h1>
+        <h1 style="color: #1a1f2e;">Hi, <%= user.name %></h1>
+        <form action="/changePassword" method="get">
+            <button type="submit" class="edit-profile-btn">Change Password</button>
+        </form>
     </div>
-    
     <script src="homeJS.js"></script>
 </body>
 </html>

@@ -130,7 +130,6 @@ const securePassword = async (password: string): Promise<string> => {
     }
 };
 
-
 const getHome = async (req: Request, res: Response): Promise<void> => {
     try {
         res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
@@ -142,7 +141,7 @@ const getHome = async (req: Request, res: Response): Promise<void> => {
             console.log(userData, "userData: ");
 
             if (userData) {
-                res.render('home.ejs', { user: userData });
+                res.render('home.ejs', { user: userData, query: req.query });
             } else {
                 res.redirect('/');
             }
@@ -193,6 +192,79 @@ const checkAuth = async (req: Request, res: Response): Promise<void> => {
     }
 };
 
+const getEdit = async (req: Request, res: Response): Promise<void> =>{
+    try {
+        res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+        res.setHeader('Pragma', 'no-cache');
+        res.setHeader('Expires', '0');
+
+        if (req.session.user) {
+            let userData = await userModel.findById(req.session.user);
+
+            if (userData) {
+                res.render('changePassword.ejs', { user: userData , error: null});
+            } else {
+                res.redirect('/');
+            }
+        } else {
+            res.redirect('/');
+        }
+    } catch (error) {
+        console.error("Error in getEdit controller: ", error);
+        res.status(500).send("An unexpected error occurred in getEdit.");
+    }
+}
+
+const updatePassword = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { currentPassword, newPassword, confirmPassword } = req.body;
+
+        if (!currentPassword || !newPassword || !confirmPassword) {
+            const userData = await userModel.findById(req.session.user);
+            return res.render('changePassword.ejs', { user: userData, error: 'All fields are mandatory.' });
+        }
+
+        if (newPassword !== confirmPassword) {
+            const userData = await userModel.findById(req.session.user);
+            return res.render('changePassword.ejs', { user: userData, error: 'New password and confirm password do not match.' });
+        }
+
+        if (newPassword.includes(' ')) {
+            const userData = await userModel.findById(req.session.user);
+            return res.render('changePassword.ejs', { user: userData, error: 'New password cannot contain spaces.' });
+        }
+
+        const passwordRegex = /^(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Z][A-Za-z\d@$!%*?&]{4,}$/;
+        if (!passwordRegex.test(newPassword)) {
+            const userData = await userModel.findById(req.session.user);
+            return res.render('changePassword.ejs', { user: userData, error: 'New password must start with a capital letter, contain at least one lowercase letter, one number, one special character (@$!%*?&), and be at least 5 characters long.' });
+        }
+
+        const user = await userModel.findById(req.session.user);
+        if (!user) {
+            return res.redirect('/');
+        }
+
+        const isMatch = await bcrypt.compare(currentPassword, user.password);
+        if (!isMatch) {
+            const userData = await userModel.findById(req.session.user);
+            return res.render('changePassword.ejs', { user: userData, error: 'Incorrect current password.' });
+        }
+
+        user.password = await bcrypt.hash(newPassword, 10);
+        await user.save();
+
+        return res.redirect('/home?success=passwordUpdated');
+
+    } catch (error) {
+        console.error("Error in updatePassword controller: ", error);
+        const userData = await userModel.findById(req.session.user);
+        return res.render('changePassword.ejs', { user: userData, error: 'Password not updated. Please try again.' });
+    }
+};
+
+
+
 export default {
     getIndex,
     loginPage,
@@ -200,5 +272,7 @@ export default {
     signup,
     getHome,
     logout,
-    checkAuth
+    checkAuth,
+    getEdit,
+    updatePassword,
 }

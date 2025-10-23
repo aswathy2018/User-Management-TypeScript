@@ -5,6 +5,7 @@ import path from "path";
 import session from "express-session";
 import user from "./routes/userRoute";
 import admin from "./routes/adminRoute";
+import { noCache } from "./middleware/cacheControl";
 
 mongoose.connect(process.env.MONGO_URI as string)
   .then(() => console.log("MongoDB connected"))
@@ -30,7 +31,7 @@ app.set("views", [
 
 
 app.use("/", user)
-app.use("/admin", admin)
+app.use("/admin", noCache, admin)
 
 
 app.listen(5280, ()=>{
